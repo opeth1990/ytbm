@@ -380,6 +380,7 @@ footer {
 [lang-section="en"] { display: none; }
 body.en [lang-section="ko"] { display: none; }
 body.en [lang-section="en"] { display: block; }
+body.en .features-grid[lang-section="en"] { display: grid; }
 body.en .rep-inner [lang-section="en"] { display: grid; }
 </style>
 </head>
@@ -453,7 +454,7 @@ body.en .rep-inner [lang-section="en"] { display: grid; }
     <p class="section-sub">You decide what gets blocked. All data stays in your browser — nothing is sent externally.</p>
   </div>
 
-  <div class="features-grid">
+  <div class="features-grid" lang-section="ko">
     <div class="feat-card">
       <div class="feat-icon">🚫</div>
       <div class="feat-title">채널 차단</div>
@@ -489,6 +490,44 @@ body.en .rep-inner [lang-section="en"] { display: grid; }
       <div class="feat-title">데이터 백업 · 복원</div>
       <div class="feat-desc">차단 목록을 JSON 파일로 내보내고 불러올 수 있습니다. 브라우저를 바꿔도 데이터를 그대로 이어갑니다.</div>
       <div class="feat-tags"><span class="feat-tag">JSON 내보내기</span><span class="feat-tag">화이트리스트</span></div>
+    </div>
+  </div>
+  <div class="features-grid" lang-section="en">
+    <div class="feat-card">
+      <div class="feat-icon">🚫</div>
+      <div class="feat-title">Channel Block</div>
+      <div class="feat-desc">Block channels anywhere — feed, search, or comments. A block button appears when you hover over any video.</div>
+      <div class="feat-tags"><span class="feat-tag">Instant block</span><span class="feat-tag">Undo support</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">💬</div>
+      <div class="feat-title">Comment & Chat Filter</div>
+      <div class="feat-desc">Instantly hides comments from blocked channels and those containing banned keywords. Works in live chat too.</div>
+      <div class="feat-tags"><span class="feat-tag">Live chat</span><span class="feat-tag">Reply settings</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">Remove Shorts</div>
+      <div class="feat-desc">Remove Shorts from the tab, home feed, sidebar, and search results with a single toggle.</div>
+      <div class="feat-tags"><span class="feat-tag">Sidebar</span><span class="feat-tag">Home feed</span><span class="feat-tag">Instant</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🔤</div>
+      <div class="feat-title">Keyword Filter</div>
+      <div class="feat-desc">Filter comments and video titles containing specific words. Auto-block on keyword detection is also available.</div>
+      <div class="feat-tags"><span class="feat-tag">Auto-block</span><span class="feat-tag">False positive log</span><span class="feat-tag">Bulk restore</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🎬</div>
+      <div class="feat-title">Video Block</div>
+      <div class="feat-desc">Hide specific videos without blocking the entire channel. Fine-grained filtering at the video level.</div>
+      <div class="feat-tags"><span class="feat-tag">Per-video</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">💾</div>
+      <div class="feat-title">Backup & Restore</div>
+      <div class="feat-desc">Export your block list as a JSON file and import it anytime. Your data follows you across browsers.</div>
+      <div class="feat-tags"><span class="feat-tag">JSON export</span><span class="feat-tag">Whitelist</span></div>
     </div>
   </div>
 </section>
@@ -543,7 +582,8 @@ body.en .rep-inner [lang-section="en"] { display: grid; }
           </div>
         </div>
       </div>
-      <p class="rep-note">배지에 마우스를 올리면 사유별 제보 내역을 확인할 수 있습니다. 차단 사유를 제보해 데이터 누적에 참여할 수 있습니다.</p>
+      <p class="rep-note" lang-section="ko">배지에 마우스를 올리면 사유별 제보 내역을 확인할 수 있습니다. 차단 사유를 제보해 데이터 누적에 참여할 수 있습니다.</p>
+      <p class="rep-note" lang-section="en">Hover over a badge to see a breakdown of reports by reason. You can contribute by submitting block reasons.</p>
     </div>
   </div>
 </section>
