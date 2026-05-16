@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YTBM — YouTube Block Manager</title>
+<meta name="description" content="악성 댓글·채널 차단, Shorts 제거, 키워드 필터링까지. 유튜브를 내 입맛에 맞게 정리해 주는 확장앱.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --red: #E24B4A;
+  --red-dim: rgba(226,75,74,0.15);
+  --red-glow: rgba(226,75,74,0.08);
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --surface2: #1c1c1c;
+  --border: rgba(255,255,255,0.07);
+  --text: #ffffff;
+  --text-dim: rgba(255,255,255,0.45);
+  --text-faint: rgba(255,255,255,0.2);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* grid texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none; z-index: 0;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 18px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(10,10,10,0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px; letter-spacing: 2px;
+  color: var(--text);
+}
+.nav-logo span { color: var(--red); }
+.nav-install {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--red);
+  color: #fff; font-weight: 600; font-size: 14px;
+  padding: 10px 22px; border-radius: 10px;
+  text-decoration: none;
+  transition: opacity .2s;
+}
+.nav-install:hover { opacity: 0.85; }
+.nav-install svg { width: 16px; height: 16px; }
+
+/* ── HERO ── */
+.hero {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: center;
+  padding: 120px 60px 80px;
+  overflow: hidden;
+}
+.hero-glow {
+  position: absolute;
+  left: -100px; bottom: -100px;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(226,75,74,0.14) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-glow2 {
+  position: absolute;
+  right: 100px; top: 100px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(226,75,74,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--red-dim);
+  border: 1px solid rgba(226,75,74,0.3);
+  color: var(--red);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  padding: 6px 16px; border-radius: 20px;
+  margin-bottom: 28px;
+}
+.hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(72px, 9vw, 140px);
+  line-height: 0.88; letter-spacing: 2px;
+  margin-bottom: 32px;
+}
+.hero-title em { color: var(--red); font-style: normal; display: block; }
+.hero-desc {
+  max-width: 560px;
+  font-size: 17px; color: var(--text-dim);
+  line-height: 1.75; margin-bottom: 44px;
+}
+.hero-desc strong { color: rgba(255,255,255,0.75); font-weight: 500; }
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--red);
+  color: #fff; font-weight: 700; font-size: 15px;
+  padding: 14px 30px; border-radius: 12px;
+  text-decoration: none;
+  box-shadow: 0 12px 40px rgba(226,75,74,0.35);
+  transition: transform .2s, box-shadow .2s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 50px rgba(226,75,74,0.45); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim); font-weight: 500; font-size: 15px;
+  padding: 14px 28px; border-radius: 12px;
+  text-decoration: none;
+  transition: border-color .2s, color .2s;
+}
+.btn-secondary:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+.hero-tags {
+  margin-top: 48px;
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+.hero-tag {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 12px; font-weight: 500;
+  letter-spacing: 0.5px;
+  padding: 6px 14px; border-radius: 20px;
+}
+
+/* ── SECTION BASE ── */
+section { position: relative; z-index: 1; padding: 100px 60px; }
+.section-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--red); font-size: 11px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.section-label::before {
+  content: '';
+  width: 20px; height: 1px; background: var(--red);
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 5vw, 72px);
+  line-height: 0.92; letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+.section-title em { color: var(--red); font-style: normal; }
+.section-sub {
+  font-size: 16px; color: var(--text-dim);
+  max-width: 520px; line-height: 1.7;
+  margin-bottom: 60px;
+}
+
+/* ── FEATURES GRID ── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+.feat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px 30px;
+  transition: border-color .25s, transform .25s;
+}
+.feat-card:hover {
+  border-color: rgba(226,75,74,0.25);
+  transform: translateY(-3px);
+}
+.feat-icon {
+  width: 42px; height: 42px;
+  background: var(--red-dim);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  margin-bottom: 18px;
+}
+.feat-title {
+  font-size: 16px; font-weight: 700;
+  margin-bottom: 8px; color: var(--text);
+}
+.feat-desc {
+  font-size: 14px; color: var(--text-dim);
+  line-height: 1.65;
+}
+.feat-tags { margin-top: 16px; display: flex; gap: 6px; flex-wrap: wrap; }
+.feat-tag {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-faint);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 3px 10px; border-radius: 20px;
+}
+
+/* ── REPUTATION SECTION ── */
+.rep-section { background: var(--surface); }
+.rep-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: center;
+}
+.rep-mockup {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.rep-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; border-radius: 12px;
+  background: rgba(255,255,255,0.025);
+  position: relative;
+}
+.rep-ava {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #333; flex-shrink: 0;
+}
+.rep-ava.warn { background: rgba(226,75,74,0.2); }
+.rep-lines { flex: 1; display: flex; flex-direction: column; gap: 5px; padding-top: 2px; }
+.rep-line { height: 7px; border-radius: 4px; background: rgba(255,255,255,0.08); }
+.rep-line.w70 { width: 70%; }
+.rep-line.w45 { width: 45%; }
+.rep-line.w60 { width: 60%; }
+.rep-line.warn { background: rgba(226,75,74,0.15); }
+.rep-badge {
+  position: absolute; right: 14px; top: 50%;
+  transform: translateY(-50%);
+  background: rgba(226,75,74,0.15);
+  border: 1px solid rgba(226,75,74,0.3);
+  color: var(--red);
+  font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px;
+  white-space: nowrap;
+}
+.rep-note {
+  margin-top: 16px;
+  font-size: 12px; color: var(--text-faint);
+  line-height: 1.6;
+}
+
+/* ── PRIVACY ── */
+.privacy-box {
+  max-width: 700px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--red);
+  border-radius: 0 16px 16px 0;
+  padding: 32px 36px;
+}
+.privacy-box p { font-size: 15px; color: var(--text-dim); line-height: 1.75; }
+.privacy-box p + p { margin-top: 12px; }
+
+/* ── WARNING ── */
+.warn-box {
+  max-width: 720px;
+  background: rgba(226,75,74,0.05);
+  border: 1px solid rgba(226,75,74,0.2);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-top: 20px;
+}
+.warn-box-title {
+  font-size: 13px; font-weight: 700;
+  color: var(--red); letter-spacing: 1px;
+  text-transform: uppercase; margin-bottom: 12px;
+}
+.warn-box ul {
+  list-style: none;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.warn-box li {
+  font-size: 14px; color: var(--text-dim);
+  padding-left: 16px; position: relative; line-height: 1.6;
+}
+.warn-box li::before {
+  content: '—';
+  position: absolute; left: 0;
+  color: var(--red); font-size: 12px;
+}
+
+/* ── FOOTER ── */
+footer {
+  position: relative; z-index: 1;
+  padding: 60px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px;
+}
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 2px;
+}
+.footer-logo span { color: var(--red); }
+.footer-links {
+  display: flex; gap: 24px;
+}
+.footer-links a {
+  color: var(--text-faint);
+  text-decoration: none; font-size: 13px;
+  transition: color .2s;
+}
+.footer-links a:hover { color: var(--text-dim); }
+.footer-copy {
+  font-size: 12px; color: var(--text-faint);
+  width: 100%;
+}
+
+/* ── DIVIDER ── */
+.divider {
+  position: relative; z-index: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent);
+  margin: 0 60px;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .hero, section, footer { padding-left: 24px; padding-right: 24px; }
+  .divider { margin: 0 24px; }
+  .rep-inner { grid-template-columns: 1fr; gap: 40px; }
+  .features-grid { grid-template-columns: 1fr; }
+}
+
+/* fade in */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-eyebrow { animation: fadeUp .6s ease both; }
+.hero-title   { animation: fadeUp .6s .1s ease both; }
+.hero-desc    { animation: fadeUp .6s .2s ease both; }
+.hero-actions { animation: fadeUp .6s .3s ease both; }
+.hero-tags    { animation: fadeUp .6s .4s ease both; }
+
+.lang-toggle {
+  display: flex; gap: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 3px;
+}
+.lang-btn {
+  background: transparent; border: none; cursor: pointer;
+  color: var(--text-dim); font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 600;
+  padding: 5px 12px; border-radius: 6px;
+  transition: background .15s, color .15s;
+}
+.lang-btn.active {
+  background: var(--red); color: #fff;
+}
+[lang-section="en"] { display: none; }
+body.en [lang-section="ko"] { display: none; }
+body.en [lang-section="en"] { display: block; }
+body.en .rep-inner [lang-section="en"] { display: grid; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">YT<span>BM</span></div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('ko')">한국어</button>
+      <button class="lang-btn" onclick="setLang('en')">English</button>
+    </div>
+    <a class="nav-install" href="https://chromewebstore.google.com/detail/fejgbojbglcppkkchkolchadoccdikma" target="_blank">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v10M4 7l4 4 4-4"/><path d="M2 13h12"/></svg>
+    Chrome에 설치
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div lang-section="ko">
+    <div class="hero-eyebrow"><div class="hero-dot"></div>YouTube Block Manager</div>
+    <h1 class="hero-title">CLEAN<br><em>FEED</em></h1>
+    <p class="hero-desc">유튜브를 보다 쾌적하게.<br><strong>악성 댓글·채널 차단, Shorts 제거, 키워드 필터링까지</strong> — 유튜브를 내 입맛에 맞게 정리해 주는 확장앱입니다.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://chromewebstore.google.com/detail/fejgbojbglcppkkchkolchadoccdikma" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 14.4C4.5 14.4 1.6 11.5 1.6 8S4.5 1.6 8 1.6 14.4 4.5 14.4 8 11.5 14.4 8 14.4z"/></svg>
+        Chrome 웹스토어에서 설치
+      </a>
+      
+    </div>
+    <div class="hero-tags">
+      <span class="hero-tag">채널 차단</span><span class="hero-tag">댓글 필터</span><span class="hero-tag">Shorts 제거</span>
+      <span class="hero-tag">키워드 필터링</span><span class="hero-tag">커뮤니티 평판</span><span class="hero-tag">자동 차단</span>
+    </div>
+  </div>
+  <div lang-section="en">
+    <div class="hero-eyebrow"><div class="hero-dot"></div>YouTube Block Manager</div>
+    <h1 class="hero-title">CLEAN<br><em>FEED</em></h1>
+    <p class="hero-desc">A cleaner YouTube experience.<br><strong>Block channels, filter comments, remove Shorts, and auto-block by keyword</strong> — all on your terms.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://chromewebstore.google.com/detail/fejgbojbglcppkkchkolchadoccdikma" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 14.4C4.5 14.4 1.6 11.5 1.6 8S4.5 1.6 8 1.6 14.4 4.5 14.4 8 11.5 14.4 8 14.4z"/></svg>
+        Install on Chrome
+      </a>
+      
+    </div>
+    <div class="hero-tags">
+      <span class="hero-tag">Channel Block</span><span class="hero-tag">Comment Filter</span><span class="hero-tag">Remove Shorts</span>
+      <span class="hero-tag">Keyword Filter</span><span class="hero-tag">Community Rep</span><span class="hero-tag">Auto-block</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURES -->
+<section>
+  <div lang-section="ko">
+    <div class="section-label">주요 기능</div>
+    <h2 class="section-title">원하지 않는 콘텐츠를<br><em>골라서 차단</em></h2>
+    <p class="section-sub">차단 대상은 사용자가 직접 설정합니다. 모든 데이터는 브라우저 로컬에만 저장됩니다.</p>
+  </div>
+  <div lang-section="en">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Block what you<br><em>don't want</em></h2>
+    <p class="section-sub">You decide what gets blocked. All data stays in your browser — nothing is sent externally.</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon">🚫</div>
+      <div class="feat-title">채널 차단</div>
+      <div class="feat-desc">피드·검색·댓글 어디서든 보기 싫은 채널을 차단합니다. 영상에 마우스를 올리면 차단 버튼이 바로 표시됩니다.</div>
+      <div class="feat-tags"><span class="feat-tag">즉시 차단 모드</span><span class="feat-tag">실수 방지</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">💬</div>
+      <div class="feat-title">댓글 및 채팅 차단</div>
+      <div class="feat-desc">차단한 채널의 댓글과 금지어가 포함된 댓글을 즉시 숨깁니다. 실시간 방송 채팅창에서도 작동합니다.</div>
+      <div class="feat-tags"><span class="feat-tag">라이브 채팅</span><span class="feat-tag">대댓글 설정</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">Shorts 완전 제거</div>
+      <div class="feat-desc">Shorts 탭, 홈 피드, 사이드바, 검색 결과에서 숏츠를 토글 하나로 완전히 제거합니다.</div>
+      <div class="feat-tags"><span class="feat-tag">사이드바 제거</span><span class="feat-tag">홈피드 제거</span><span class="feat-tag">즉시 적용</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🔤</div>
+      <div class="feat-title">키워드 필터링</div>
+      <div class="feat-desc">설정한 단어가 포함된 댓글과 영상 제목을 걸러냅니다. 키워드 감지 시 자동 차단 설정도 가능합니다.</div>
+      <div class="feat-tags"><span class="feat-tag">자동 차단</span><span class="feat-tag">오탐 로그</span><span class="feat-tag">일괄 복구</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🎬</div>
+      <div class="feat-title">영상 차단</div>
+      <div class="feat-desc">채널은 유지한 채 특정 영상만 골라서 숨길 수 있습니다. 세밀한 필터링이 가능합니다.</div>
+      <div class="feat-tags"><span class="feat-tag">영상 단위</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">💾</div>
+      <div class="feat-title">데이터 백업 · 복원</div>
+      <div class="feat-desc">차단 목록을 JSON 파일로 내보내고 불러올 수 있습니다. 브라우저를 바꿔도 데이터를 그대로 이어갑니다.</div>
+      <div class="feat-tags"><span class="feat-tag">JSON 내보내기</span><span class="feat-tag">화이트리스트</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- REPUTATION -->
+<section class="rep-section">
+  <div class="rep-inner">
+    <div>
+      <div lang-section="ko">
+        <div class="section-label">커뮤니티 평판</div>
+        <h2 class="section-title">여러 명이 제보한<br>계정에 <em>배지 표시</em></h2>
+        <p class="section-sub" style="margin-bottom:28px;">여러 사용자에게 제보된 계정에 "⚠️ N명 차단" 경고 배지를 표시합니다. 차단 여부는 항상 본인이 직접 결정합니다.</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <span class="hero-tag">익명 제보</span><span class="hero-tag">배지 표시</span>
+          <span class="hero-tag">기본 OFF</span><span class="hero-tag">선택 기능</span>
+        </div>
+      </div>
+      <div lang-section="en">
+        <div class="section-label">Community Reputation</div>
+        <h2 class="section-title">Crowdsourced<br><em>warning badges</em></h2>
+        <p class="section-sub" style="margin-bottom:28px;">Accounts reported by multiple users get a "⚠️ N blocked" warning badge. You always decide whether to block.</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <span class="hero-tag">Anonymous</span><span class="hero-tag">Badge Display</span>
+          <span class="hero-tag">Off by default</span><span class="hero-tag">Opt-in</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="rep-mockup">
+        <div class="rep-row">
+          <div class="rep-ava"></div>
+          <div class="rep-lines">
+            <div class="rep-line w70"></div>
+            <div class="rep-line w45"></div>
+          </div>
+        </div>
+        <div class="rep-row warn" style="background:rgba(226,75,74,0.04); border:1px solid rgba(226,75,74,0.1);">
+          <div class="rep-ava warn"></div>
+          <div class="rep-lines">
+            <div class="rep-line warn w60"></div>
+            <div class="rep-line warn w45"></div>
+          </div>
+          <div class="rep-badge">⚠️ 24명 차단</div>
+        </div>
+        <div class="rep-row">
+          <div class="rep-ava"></div>
+          <div class="rep-lines">
+            <div class="rep-line w70"></div>
+            <div class="rep-line w45"></div>
+          </div>
+        </div>
+      </div>
+      <p class="rep-note">배지에 마우스를 올리면 사유별 제보 내역을 확인할 수 있습니다. 차단 사유를 제보해 데이터 누적에 참여할 수 있습니다.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- AUTO BLOCK WARNING -->
+<section>
+  <div lang-section="ko">
+    <div class="section-label">주의사항</div>
+    <h2 class="section-title">자동 차단 사용 전<br><em>반드시 읽으세요</em></h2>
+    <p class="section-sub">이 기능은 문맥을 이해하지 못하고 오직 단어 포함 여부만 판단합니다.</p>
+    <div class="warn-box">
+      <div class="warn-box-title">⚠️ 사용 지침</div>
+      <ul>
+        <li>금지어는 최대한 길고 구체적인 악성 표현으로 설정하세요.</li>
+        <li>자동 차단 로그를 주기적으로 확인해 억울하게 차단된 계정을 복구해 주세요.</li>
+        <li>평소 즐겨보거나 신뢰하는 채널은 미리 화이트리스트에 등록해 두세요.</li>
+      </ul>
+    </div>
+  </div>
+  <div lang-section="en">
+    <div class="section-label">Important Notice</div>
+    <h2 class="section-title">Before using<br><em>Auto-block</em></h2>
+    <p class="section-sub">This feature only checks for keyword presence — it cannot understand context.</p>
+    <div class="warn-box">
+      <div class="warn-box-title">⚠️ Guidelines</div>
+      <ul>
+        <li>Set keywords as long, specific abusive phrases to reduce false positives.</li>
+        <li>Regularly review the auto-block log and recover any mistakenly blocked accounts.</li>
+        <li>Add channels you trust to the whitelist in advance.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRIVACY -->
+<section>
+  <div lang-section="ko">
+    <div class="section-label">개인정보 보호</div>
+    <h2 class="section-title">데이터는<br><em>로컬에만</em></h2>
+    <div class="privacy-box">
+      <p>모든 차단 데이터는 브라우저 로컬에만 저장되며 외부로 전송되지 않습니다.</p>
+      <p>'커뮤니티 평판' 기능은 기본 OFF이며, 직접 활성화한 경우에 한해 개인정보 없이 익명화된 데이터만 처리됩니다.</p>
+    </div>
+  </div>
+  <div lang-section="en">
+    <div class="section-label">Privacy</div>
+    <h2 class="section-title">Your data stays<br><em>local</em></h2>
+    <div class="privacy-box">
+      <p>All block data is stored exclusively in your browser's local storage. Nothing is sent to external servers.</p>
+      <p>The Community Reputation feature is off by default. When enabled, only anonymized data is processed — no personal information is collected.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">YT<span>BM</span></div>
+  <div class="footer-links">
+    <a href="https://chromewebstore.google.com/detail/fejgbojbglcppkkchkolchadoccdikma" target="_blank">
+      <span lang-section="ko">Chrome 웹스토어</span><span lang-section="en">Chrome Web Store</span>
+    </a>
+    
+    <a href="https://opeth1990.github.io/ytbm-privacy-policy/privacy-policy.html" target="_blank">
+      <span lang-section="ko">개인정보처리방침</span><span lang-section="en">Privacy Policy</span>
+    </a>
+    <a href="mailto:no7beckham.dev@gmail.com">
+      <span lang-section="ko">문의</span><span lang-section="en">Contact</span>
+    </a>
+  </div>
+  <div class="footer-copy">© 2025 YTBM · YouTube Block Manager · no7beckham.dev@gmail.com</div>
+</footer>
+
+<script>
+function setLang(lang) {
+  document.body.classList.toggle('en', lang === 'en');
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim() === (lang === 'ko' ? '한국어' : 'English'));
+  });
+}
+</script>
+</body>
+</html>
