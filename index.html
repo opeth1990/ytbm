@@ -626,7 +626,7 @@ body.en .features-grid[lang-section="en"] { display: grid; }
       <div class="warn-box-title">⚠️ 사용 지침</div>
       <ul>
         <li>키워드는 최대한 길고 구체적인 악성 표현으로 설정하세요.</li>
-        <li>자동 차단 로그를 주기적으로 확인해 억울하게 차단된 계정을 복구해 주세요.</li>
+        <li>자동 차단 로그를 주기적으로 확인해 오탐된 계정을 복구해 주세요.</li>
         <li>평소 즐겨보거나 신뢰하는 채널은 미리 화이트리스트에 등록해 두세요.</li>
       </ul>
     </div>
@@ -693,6 +693,21 @@ function setLang(lang) {
   document.body.classList.toggle('en', lang === 'en');
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.classList.toggle('active', btn.textContent.trim() === (lang === 'ko' ? '한국어' : 'English'));
+  });
+}
+// URL 파라미터나 브라우저 설정 언어 감지하여 최초 설정
+const urlParams = new URLSearchParams(window.location.search);
+let lang = urlParams.get('lang');
+if (!lang) {
+  const navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+  lang = navLang.startsWith('ko') ? 'ko' : 'en';
+}
+setLang(lang);
+
+// 이미 설치된 상태(installed=true)로 열린 경우 설치 버튼 숨기기
+if (urlParams.get('installed') === 'true') {
+  document.querySelectorAll('.nav-install, .btn-primary').forEach(el => {
+    el.style.display = 'none';
   });
 }
 </script>
