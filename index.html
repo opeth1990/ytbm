@@ -380,8 +380,8 @@ footer {
 [lang-section="en"] { display: none; }
 body.en [lang-section="ko"] { display: none; }
 body.en [lang-section="en"] { display: block; }
-body.en .features-grid[lang-section="en"] { display: grid; }
 body.en .rep-inner [lang-section="en"] { display: grid; }
+body.en .features-grid[lang-section="en"] { display: grid; }
 </style>
 </head>
 <body>
@@ -454,18 +454,25 @@ body.en .rep-inner [lang-section="en"] { display: grid; }
     <p class="section-sub">You decide what gets blocked. All data stays in your browser — nothing is sent externally.</p>
   </div>
 
+  <!-- Features Grid (KO) -->
   <div class="features-grid" lang-section="ko">
     <div class="feat-card">
       <div class="feat-icon">🚫</div>
       <div class="feat-title">채널 차단</div>
-      <div class="feat-desc">피드·검색·댓글 어디서든 보기 싫은 채널을 차단합니다. 영상에 마우스를 올리면 차단 버튼이 바로 표시됩니다.</div>
-      <div class="feat-tags"><span class="feat-tag">즉시 차단 모드</span><span class="feat-tag">실수 방지</span></div>
+      <div class="feat-desc">피드, 검색 결과, 댓글 어디서든 보기 싫은 채널을 차단합니다. 영상에 마우스를 올리면 차단 버튼이 바로 표시됩니다.</div>
+      <div class="feat-tags"><span class="feat-tag">피드 차단</span><span class="feat-tag">채널 핸들</span></div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">💬</div>
-      <div class="feat-title">댓글 및 채팅 차단</div>
-      <div class="feat-desc">차단한 채널의 댓글과 금지어가 포함된 댓글을 즉시 숨깁니다. 실시간 방송 채팅창에서도 작동합니다.</div>
-      <div class="feat-tags"><span class="feat-tag">라이브 채팅</span><span class="feat-tag">대댓글 설정</span></div>
+      <div class="feat-title">댓글 및 라이브 채팅 차단</div>
+      <div class="feat-desc">댓글에 마우스를 올리면 닉네임 옆에 [차단] 버튼이 표시됩니다. 차단한 핸들의 댓글과 키워드가 포함된 댓글을 즉시 숨기며, 대댓글 숨기기도 설정 가능합니다.</div>
+      <div class="feat-tags"><span class="feat-tag">라이브 채팅</span><span class="feat-tag">대댓글 숨기기</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">👁️‍🗨️</div>
+      <div class="feat-title">전체 댓글 및 채팅 숨기기</div>
+      <div class="feat-desc">모든 영상의 댓글창, Shorts 댓글, 실시간 채팅창을 토글 하나로 완전히 숨깁니다. 특정 채널 차단과 별개로 댓글 자체를 보고 싶지 않을 때 사용합니다.</div>
+      <div class="feat-tags"><span class="feat-tag">원클릭 토글</span><span class="feat-tag">댓글창 숨김</span></div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">⚡</div>
@@ -474,60 +481,80 @@ body.en .rep-inner [lang-section="en"] { display: grid; }
       <div class="feat-tags"><span class="feat-tag">사이드바 제거</span><span class="feat-tag">홈피드 제거</span><span class="feat-tag">즉시 적용</span></div>
     </div>
     <div class="feat-card">
+      <div class="feat-icon">🛡️</div>
+      <div class="feat-title">즉시 차단 및 실수 방지</div>
+      <div class="feat-desc">설정에서 '즉시 차단 모드'를 켜면 확인 창 없이 바로 차단됩니다. 실수로 차단한 경우, 숨겨진 댓글을 클릭하면 즉시 복구(Undo)할 수 있습니다.</div>
+      <div class="feat-tags"><span class="feat-tag">즉시 차단 모드</span><span class="feat-tag">실수 복구</span></div>
+    </div>
+    <div class="feat-card">
       <div class="feat-icon">🔤</div>
       <div class="feat-title">키워드 필터링</div>
-      <div class="feat-desc">설정한 단어가 포함된 댓글과 영상 제목을 걸러냅니다. 키워드 감지 시 자동 차단 설정도 가능합니다.</div>
+      <div class="feat-desc">설정한 단어가 포함된 댓글과 영상 제목을 걸러냅니다. 키워드가 포함된 제목과 댓글이 자동으로 숨겨집니다.</div>
+      <div class="feat-tags"><span class="feat-tag">제목 필터링</span><span class="feat-tag">댓글 필터링</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🎯</div>
+      <div class="feat-title">키워드 감지 시 계정 자동 차단</div>
+      <div class="feat-desc">지정한 키워드가 포함된 댓글 작성자를 감지 즉시 차단 목록에 추가합니다. 자동 차단된 모든 내역은 오탐 로그에서 개별 해제하거나 키워드 단위 일괄 복구를 지원하며, 복구된 계정은 화이트리스트에 자동 등록됩니다.</div>
       <div class="feat-tags"><span class="feat-tag">자동 차단</span><span class="feat-tag">오탐 로그</span><span class="feat-tag">일괄 복구</span></div>
     </div>
     <div class="feat-card">
-      <div class="feat-icon">🎬</div>
-      <div class="feat-title">영상 차단</div>
-      <div class="feat-desc">채널은 유지한 채 특정 영상만 골라서 숨길 수 있습니다. 세밀한 필터링이 가능합니다.</div>
-      <div class="feat-tags"><span class="feat-tag">영상 단위</span></div>
-    </div>
-    <div class="feat-card">
       <div class="feat-icon">💾</div>
-      <div class="feat-title">데이터 백업 · 복원</div>
-      <div class="feat-desc">차단 목록을 JSON 파일로 내보내고 불러올 수 있습니다. 브라우저를 바꿔도 데이터를 그대로 이어갑니다.</div>
-      <div class="feat-tags"><span class="feat-tag">JSON 내보내기</span><span class="feat-tag">화이트리스트</span></div>
+      <div class="feat-title">데이터 백업 · 복원 및 화이트리스트</div>
+      <div class="feat-desc">차단 목록을 JSON 파일로 내보내고 불러올 수 있어 브라우저를 바꿔도 데이터를 이어갑니다. 차단에서 절대 제외할 채널을 화이트리스트로 등록해 우선 보호할 수 있습니다.</div>
+      <div class="feat-tags"><span class="feat-tag">JSON 백업</span><span class="feat-tag">화이트리스트</span></div>
     </div>
   </div>
+
+  <!-- Features Grid (EN) -->
   <div class="features-grid" lang-section="en">
     <div class="feat-card">
       <div class="feat-icon">🚫</div>
-      <div class="feat-title">Channel Block</div>
-      <div class="feat-desc">Block channels anywhere — feed, search, or comments. A block button appears when you hover over any video.</div>
-      <div class="feat-tags"><span class="feat-tag">Instant block</span><span class="feat-tag">Undo support</span></div>
+      <div class="feat-title">Channel Blocking</div>
+      <div class="feat-desc">Block any channel from your feed, search, and comments. A block button appears instantly when you hover over any video.</div>
+      <div class="feat-tags"><span class="feat-tag">Feed Block</span><span class="feat-tag">Channel Handles</span></div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">💬</div>
-      <div class="feat-title">Comment & Chat Filter</div>
-      <div class="feat-desc">Instantly hides comments from blocked channels and those containing banned keywords. Works in live chat too.</div>
-      <div class="feat-tags"><span class="feat-tag">Live chat</span><span class="feat-tag">Reply settings</span></div>
+      <div class="feat-title">Comment & Live Chat Blocking</div>
+      <div class="feat-desc">A block button appears next to nicknames on hover. Instantly hides comments from blocked handles and comments containing keywords. Also works in live chat, with options to hide replies.</div>
+      <div class="feat-tags"><span class="feat-tag">Live Chat</span><span class="feat-tag">Hide Replies</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">👁️‍🗨️</div>
+      <div class="feat-title">Hide All Comments & Chat</div>
+      <div class="feat-desc">Hides all comment sections, Shorts comments, and live chat windows with a single toggle. Use this when you simply don't want to see any comments, regardless of channel blocking.</div>
+      <div class="feat-tags"><span class="feat-tag">One-Click Toggle</span><span class="feat-tag">Hide Comments</span></div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">⚡</div>
-      <div class="feat-title">Remove Shorts</div>
-      <div class="feat-desc">Remove Shorts from the tab, home feed, sidebar, and search results with a single toggle.</div>
-      <div class="feat-tags"><span class="feat-tag">Sidebar</span><span class="feat-tag">Home feed</span><span class="feat-tag">Instant</span></div>
+      <div class="feat-title">Hide Shorts</div>
+      <div class="feat-desc">Completely removes Shorts from the Shorts tab, home feed, sidebar, and search results with a single toggle.</div>
+      <div class="feat-tags"><span class="feat-tag">Sidebar Removal</span><span class="feat-tag">Home Feed Removal</span><span class="feat-tag">Instant Apply</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🛡️</div>
+      <div class="feat-title">Instant Block & Undo</div>
+      <div class="feat-desc">Enable 'Instant Block Mode' in settings to block without a confirmation dialog. Made a mistake? Click on any hidden comment to instantly restore (Undo) it.</div>
+      <div class="feat-tags"><span class="feat-tag">Instant Block</span><span class="feat-tag">Mistake Recovery</span></div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">🔤</div>
-      <div class="feat-title">Keyword Filter</div>
-      <div class="feat-desc">Filter comments and video titles containing specific words. Auto-block on keyword detection is also available.</div>
-      <div class="feat-tags"><span class="feat-tag">Auto-block</span><span class="feat-tag">False positive log</span><span class="feat-tag">Bulk restore</span></div>
+      <div class="feat-title">Keyword Filtering</div>
+      <div class="feat-desc">Filter out comments and video titles containing specific keywords you specify. Any content containing the keywords is hidden automatically.</div>
+      <div class="feat-tags"><span class="feat-tag">Title Filter</span><span class="feat-tag">Comment Filter</span></div>
     </div>
     <div class="feat-card">
-      <div class="feat-icon">🎬</div>
-      <div class="feat-title">Video Block</div>
-      <div class="feat-desc">Hide specific videos without blocking the entire channel. Fine-grained filtering at the video level.</div>
-      <div class="feat-tags"><span class="feat-tag">Per-video</span></div>
+      <div class="feat-icon">🎯</div>
+      <div class="feat-title">Auto-Block on Keyword Match</div>
+      <div class="feat-desc">Adds commenters whose comments contain specified keywords to your block list the moment they are detected. Supports individual or bulk restoration by keyword in the log, and automatically whitelists restored accounts.</div>
+      <div class="feat-tags"><span class="feat-tag">Auto-Block</span><span class="feat-tag">False Positive Log</span><span class="feat-tag">Bulk Restore</span></div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">💾</div>
-      <div class="feat-title">Backup & Restore</div>
-      <div class="feat-desc">Export your block list as a JSON file and import it anytime. Your data follows you across browsers.</div>
-      <div class="feat-tags"><span class="feat-tag">JSON export</span><span class="feat-tag">Whitelist</span></div>
+      <div class="feat-title">Backup, Restore & Whitelist</div>
+      <div class="feat-desc">Export and import your block list as a JSON file to transfer your data across browsers. Register trusted channels to the whitelist to protect them from all block rules.</div>
+      <div class="feat-tags"><span class="feat-tag">JSON Backup</span><span class="feat-tag">Whitelist</span></div>
     </div>
   </div>
 </section>
@@ -582,8 +609,7 @@ body.en .rep-inner [lang-section="en"] { display: grid; }
           </div>
         </div>
       </div>
-      <p class="rep-note" lang-section="ko">배지에 마우스를 올리면 사유별 제보 내역을 확인할 수 있습니다. 차단 사유를 제보해 데이터 누적에 참여할 수 있습니다.</p>
-      <p class="rep-note" lang-section="en">Hover over a badge to see a breakdown of reports by reason. You can contribute by submitting block reasons.</p>
+      <p class="rep-note">배지에 마우스를 올리면 사유별 제보 내역을 확인할 수 있습니다. 차단 사유를 제보해 데이터 누적에 참여할 수 있습니다.</p>
     </div>
   </div>
 </section>
@@ -599,7 +625,7 @@ body.en .rep-inner [lang-section="en"] { display: grid; }
     <div class="warn-box">
       <div class="warn-box-title">⚠️ 사용 지침</div>
       <ul>
-        <li>금지어는 최대한 길고 구체적인 악성 표현으로 설정하세요.</li>
+        <li>키워드는 최대한 길고 구체적인 악성 표현으로 설정하세요.</li>
         <li>자동 차단 로그를 주기적으로 확인해 억울하게 차단된 계정을 복구해 주세요.</li>
         <li>평소 즐겨보거나 신뢰하는 채널은 미리 화이트리스트에 등록해 두세요.</li>
       </ul>
